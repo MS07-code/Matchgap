@@ -11,10 +11,47 @@ const matchData = {
   "Native American": { probability: 32, patients: 670 },
 }
 
+async function askClaude(question, background) {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-5",
+      max_tokens: 1024,
+      system: `You are a compassionate, knowledgeable assistant helping people understand bone marrow donation. 
+      The user's background is: ${background || "unspecified"}.
+      Answer questions about the donation process, address cultural or religious concerns, and explain medical facts clearly.
+      Be warm, honest, and encouraging. Keep answers concise — 2-4 sentences max.
+      Never pressure anyone. Always respect their concerns.`,
+      messages: [{ role: "user", content: question }],
+    }),
+  })
+  const data = await response.json()
+  return data.content[0].text
+}
+
 function App() {
   const [selected, setSelected] = useState("")
+  const [question, setQuestion] = useState("")
+  const [answer, setAnswer] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const data = matchData[selected]
+
+  async function handleAsk() {
+    console.log("API KEY:", import.meta.env.VITE_ANTHROPIC_API_KEY)
+    if (!question.trim()) return
+    setLoading(true)
+    setAnswer("")
+    const result = await askClaude(question, selected)
+    setAnswer(result)
+    setLoading(false)
+  }
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "3rem 1.5rem", fontFamily: "sans-serif" }}>
@@ -56,10 +93,37 @@ function App() {
 
           <div style={{ marginTop: "1.5rem", padding: "1.25rem", background: "#fff8e1", borderRadius: "12px", borderLeft: "4px solid #f39c12" }}>
             <p style={{ margin: 0, color: "#7d6608" }}>
-              The average match probability for white patients is <strong>79%</strong>. 
-              For {selected} patients it is <strong>{data.probability}%</strong>. 
+              The average match probability for white patients is <strong>79%</strong>.
+              For {selected} patients it is <strong>{data.probability}%</strong>.
               Every donor from your background closes this gap.
             </p>
+          </div>
+
+          <div style={{ marginTop: "2rem" }}>
+            <h2 style={{ fontSize: "1.2rem", marginBottom: "0.75rem" }}>Have questions? Ask anything.</h2>
+            <p style={{ color: "#888", fontSize: "0.9rem", marginBottom: "1rem" }}>
+              Try: "Is donation painful?" or "Does my religion allow this?" or "How long does it take?"
+            </p>
+            <textarea
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Type your question here..."
+              rows={3}
+              style={{ width: "100%", padding: "0.75rem", fontSize: "1rem", borderRadius: "8px", border: "1px solid #ccc", resize: "vertical", boxSizing: "border-box" }}
+            />
+            <button
+              onClick={handleAsk}
+              disabled={loading}
+              style={{ marginTop: "0.75rem", width: "100%", padding: "1rem", fontSize: "1rem", fontWeight: "600", background: loading ? "#95a5a6" : "#2c3e50", color: "white", border: "none", borderRadius: "12px", cursor: loading ? "not-allowed" : "pointer" }}
+            >
+              {loading ? "Thinking..." : "Ask →"}
+            </button>
+
+            {answer && (
+              <div style={{ marginTop: "1rem", padding: "1.25rem", background: "#f0f4f8", borderRadius: "12px" }}>
+                <p style={{ margin: 0, lineHeight: "1.6" }}>{answer}</p>
+              </div>
+            )}
           </div>
 
           <button
