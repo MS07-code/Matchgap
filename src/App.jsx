@@ -1,4 +1,5 @@
 import { useState } from "react"
+import GapMapper from "./GapMapper"
 
 const matchData = {
   "White / Caucasian": { probability: 79, patients: 1200 },
@@ -190,6 +191,7 @@ function App() {
           </button>
         </div>
       )}
+      <GapMapper />
     </div>
   )
 }
