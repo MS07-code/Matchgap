@@ -89,7 +89,7 @@ function Stories() {
           <p style={{ opacity: 0.85, marginBottom: "1.5rem", lineHeight: "1.6" }}>
             If you have donated or registered, your story could inspire someone from your community to do the same.
           </p>
-          <a href="mailto:matchgap@gmail.com" style={{ background: "#f4a261", color: "white", borderRadius: "99px", padding: "1rem 2.5rem", fontSize: "1rem", fontWeight: "700", textDecoration: "none", display: "inline-block" }}>
+          <a href="mailto:joinmatchgap@gmail.com" style={{ background: "#f4a261", color: "white", borderRadius: "99px", padding: "1rem 2.5rem", fontSize: "1rem", fontWeight: "700", textDecoration: "none", display: "inline-block" }}>
             Share your story
           </a>
         </div>
