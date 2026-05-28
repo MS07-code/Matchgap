@@ -1,23 +1,26 @@
 import { Routes, Route } from "react-router-dom"
+import { LanguageProvider } from "./context/LanguageContext"
 import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Explore from "./pages/Explore"
 import Stories from "./pages/Stories"
-import Ask from "./pages/Ask"
-import Data from "./pages/Data"
+import About from "./pages/About"
+import JoinRegistry from "./pages/JoinRegistry"
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/stories" element={<Stories />} />
-        <Route path="/ask" element={<Ask />} />
-        <Route path="/data" element={<Data />} />
-      </Routes>
-    </div>
+    <LanguageProvider>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/stories" element={<Stories />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/join" element={<JoinRegistry />} />
+        </Routes>
+      </div>
+    </LanguageProvider>
   )
 }
 
